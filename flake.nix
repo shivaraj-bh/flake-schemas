@@ -35,6 +35,14 @@
           output);
       };
 
+      omSchema = {
+        version = 1;
+        doc = ''
+          Configuration for `omnix` CLI.
+        '';
+        inventory = self.lib.mkChildren;
+      };
+
       appsSchema = {
         version = 1;
         doc = ''
@@ -377,5 +385,6 @@
       schemas.darwinConfigurations = darwinConfigurationsSchema;
       schemas.darwinModules = darwinModulesSchema;
       schemas.dockerImages = dockerImagesSchema;
+      schemas.om = omSchema;
     };
 }
