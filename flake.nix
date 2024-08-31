@@ -40,7 +40,21 @@
         doc = ''
           Configuration for `omnix` CLI.
         '';
-        inventory = self.lib.mkChildren;
+        inventory = output:
+        let
+          recurse = prefix: attrs: self.lib.mkChildren (builtins.mapAttrs
+            (attrName: attrs:
+              if (builtins.typeOf attrs) != "set" then
+                {
+                  value = attrs;
+                  what = "omnix config";
+                }
+              else
+                recurse (prefix + attrName + ".") attrs
+            )
+            attrs);
+        in
+          recurse "" output;
       };
 
       appsSchema = {
