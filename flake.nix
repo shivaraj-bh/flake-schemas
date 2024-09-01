@@ -57,6 +57,50 @@
           recurse "" output;
       };
 
+      nixciSchema = {
+        version = 1;
+        doc = ''
+          Configuration for `nixci`.
+        '';
+        inventory = output:
+        let
+          recurse = prefix: attrs: self.lib.mkChildren (builtins.mapAttrs
+            (attrName: attrs:
+              if (builtins.typeOf attrs) != "set" then
+                {
+                  value = attrs;
+                  what = "nixci config";
+                }
+              else
+                recurse (prefix + attrName + ".") attrs
+            )
+            attrs);
+        in
+          recurse "" output;
+      };
+
+      nixHealthSchema = {
+        version = 1;
+        doc = ''
+          Configuration for `nix-health`.
+        '';
+        inventory = output:
+        let
+          recurse = prefix: attrs: self.lib.mkChildren (builtins.mapAttrs
+            (attrName: attrs:
+              if (builtins.typeOf attrs) != "set" then
+                {
+                  value = attrs;
+                  what = "nix-health config";
+                }
+              else
+                recurse (prefix + attrName + ".") attrs
+            )
+            attrs);
+        in
+          recurse "" output;
+      };
+
       appsSchema = {
         version = 1;
         doc = ''
@@ -400,5 +444,7 @@
       schemas.darwinModules = darwinModulesSchema;
       schemas.dockerImages = dockerImagesSchema;
       schemas.om = omSchema;
+      schemas.nixci = nixciSchema;
+      schemas.nix-health = nixHealthSchema;
     };
 }
